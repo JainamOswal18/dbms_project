@@ -1,0 +1,27 @@
+{
+  "dependencies": {
+    "bcrypt": "^5.1.1",
+    "ejs": "^3.1.10",
+    "express": "^4.21.1",
+    "mongoose": "^8.7.1"
+  },
+  "name": "dbms",
+  "version": "1.0.0",
+  "description": "Basic Signup And Login Using MongoDB",
+  "main": "app.js",
+  "type": "module",
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/JainamOswal18/dbms_project.git"
+  },
+  "author": "Jainam",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/JainamOswal18/dbms_project/issues"
+  },
+  "homepage": "https://github.com/JainamOswal18/dbms_project#readme"
+}
