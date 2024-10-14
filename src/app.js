@@ -74,7 +74,6 @@ app.get("/signup", (req, res) => {
 // });
 
 app.post("/signup", async (req, res) => {
-
   const data = {
     fName: req.body["first_name"],
     lName: req.body["last_name"],
@@ -84,33 +83,45 @@ app.post("/signup", async (req, res) => {
     pass: req.body["password"],
   };
 
-  // check if the user already exists in the db
-  const userNameExist = await User.findOne({ name: data.name });
-  const contactNumExist = await User.findOne({ contactNum: data.contactnum });
-  const emailExist = await User.findOne({ email: data.email });
-
-  if (userNameExist) {
-    res.send("Username already exists. Please choose a different user name");
-  } else if (contactNumExist) {
-    res.send("Contact number already exists. Please choose a different contact num");
-  } else if (emailExist) {
-    res.send("Email already exists. Please choose a different email");
-  }
-  // hash the password 
-  const saltedRounds = 10;
-  const hashedPassword = await bcrypt.hash(data.pass, saltedRounds);
-  data.pass = hashedPassword; // replace the password with hashed password`
-  
-  console.log("User data to save:", data);
-  const userData = new User(data);
-
   try {
+    // Check if the user already exists in the db
+    const userNameExist = await User.findOne({ name: data.name });
+    if (userNameExist) {
+      return res
+        .status(400)
+        .send("Username already exists. Please choose a different user name");
+    }
+
+    const contactNumExist = await User.findOne({ contactNum: data.contactNum });
+    if (contactNumExist) {
+      return res
+        .status(400)
+        .send(
+          "Contact number already exists. Please choose a different contact num"
+        );
+    }
+
+    const emailExist = await User.findOne({ email: data.email });
+    if (emailExist) {
+      return res
+        .status(400)
+        .send("Email already exists. Please choose a different email");
+    }
+
+    // Hash the password
+    const saltRounds = 10;
+    const hashedPassword = await bcrypt.hash(data.pass, saltRounds);
+    data.pass = hashedPassword;
+
+    console.log("User data to save:", data);
+    const userData = new User(data);
+
     await userData.save();
     console.log("User saved successfully", { userData });
     res.redirect("/login");
   } catch (err) {
-    console.log(err);
-    res.json({ msg: "not ok" });
+    console.error("Error in signup:", err);
+    res.status(500).json({ msg: "An error occurred during signup" });
   }
 });
 
